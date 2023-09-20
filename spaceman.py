@@ -66,16 +66,6 @@ def get_guessed_word(secret_word, letters_guessed):
             results += letter
     return results
 
-# def wincheck (guesses_left, is_word_guessed):
-#     if guesses_left == 0:
-#         print("You're out of guesses.")
-#         return "lose"
-#     elif is_word_guessed == True:
-#         return "win"
-#     else:
-#         print(f"You have {guesses_left} guesses left.")
-
-
 def play_again ():
     choice = ''
     while choice != 'y' and choice != 'n':
@@ -89,6 +79,32 @@ def play_again ():
         print("Thank you for playing! Goodbye!")
         return False
 
+def spaceman_art (secret_word, guesses_left):
+    asciiList = [
+    "            _..._", 
+    "          .'     '.      _", 
+    "         /    .-\"\"-\   _/ \\", 
+    "       .-|   /:.   |  |   |", 
+    "       |  \  |:.   /.-'-./", 
+    "       | .-'-;:__.'    =/", 
+    "       .'=  *=|NASA _.='", 
+    "      /   _.  |    ;", 
+    "     ;-.-'|    \   |", 
+    "    /   | \    _\  _\\", 
+    "    \\__/'._;.  ==' ==\\", 
+    "             \    \   |", 
+    "             /    /   /", 
+    "             /-._/-._/", 
+    "      jgs    \   `\  \\", 
+    "              `-._/._/", 
+    ]
+        
+    taken = len(secret_word) - guesses_left
+    percent_done = (taken / len(secret_word))
+    lines_to_draw = round(percent_done * len(asciiList))
+    
+    for i in range(lines_to_draw):
+        print(asciiList[i])
 
 def spaceman(secret_word):
     # control the game, start in command line
@@ -96,11 +112,11 @@ def spaceman(secret_word):
         startup(secret_word)
         alive = True 
         guessed_letters = ""
-        guesses_remain = 7
+        guesses_remain = len(secret_word)
         while alive == True:
             user_guess = guess(guessed_letters)
             guesses_remain = is_guess_in_word(user_guess, secret_word, guesses_remain)
-            print(f"You have {guesses_remain} incorrect guesses remaining.")
+            spaceman_art(secret_word, guesses_remain)
             guessed_letters = guessed_letters + user_guess
             if is_word_guessed(secret_word, guessed_letters) == True:
                 print("You win!")
@@ -113,13 +129,13 @@ def spaceman(secret_word):
             else:
                 print(guessed_letters)
                 print(get_guessed_word(secret_word, guessed_letters))
+                print(f"You have {guesses_remain} incorrect guesses remaining.")
         
 
 
 
 def game():
     play = True
-    guesses_remain = 7
     while play == True:
         secret_word = load_word()
         spaceman(secret_word)
@@ -129,3 +145,5 @@ def game():
 #These function calls that will start the game
 
 game()
+
+
