@@ -1,20 +1,15 @@
 import random
-
-word_list = []
-
+words_list = []
 def load_word():
-    # Loads text file, randomly selects word for secret word from the list.
-    # returns the secret word to be used in the game as a string
+    global words_list
     f = open('words.txt', 'r')
-    words_list = f.readlines()
+    words_list = f.read().split()
     f.close()
-    
-    words_list = words_list[0].split(' ') #comment this line out if you use a words.txt file with each word on a new line
     secret_word = random.choice(words_list)
     return secret_word
 
 def startup(secret_word): 
-    print("Let's play Spaceman!") 
+    print("Let's play Sinister Spaceman!") 
     print("Guess the secret word:")
     hidden_word = "_" * len(secret_word)
     print(hidden_word)
@@ -106,7 +101,30 @@ def spaceman_art (secret_word, guesses_left):
     lines_to_draw = round(percent_done * len(asciiList))
     
     for i in range(lines_to_draw):
-        print(asciiList[i])       
+        print(asciiList[i])
+
+def word_match(word, secret_word, guessed_letters):
+    if len(word) != len(secret_word):
+        return False
+    for i in range(len(word)):
+        if word[i] in guessed_letters and word[i] != secret_word[i]:
+            return False
+        elif secret_word[i] in guessed_letters and word[i] != secret_word[i]:
+            return False
+    return True
+
+def sinister_swap(secret_word, guessed_letters):
+    global words_list
+    possible_words = []
+    for word in words_list:
+        if (word_match(word, secret_word, guessed_letters)):
+            possible_words.append(word)
+    if len(possible_words) > 1:
+        print('The word has chaged!')
+        return random.choice(possible_words)
+    else:
+        print('The word could not be changed.')
+        return secret_word
 
 
 def spaceman(secret_word):
@@ -133,6 +151,7 @@ def spaceman(secret_word):
                 print(guessed_letters)
                 print(get_guessed_word(secret_word, guessed_letters))
                 print(f"You have {guesses_remain} incorrect guesses remaining.")
+                secret_word = sinister_swap(secret_word, guessed_letters)
 
 def game():
     play = True
